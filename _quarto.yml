@@ -3,5 +3,4 @@ project:
   output-dir: docs
   render: 
     - "*.qmd"
-    - "!RF_Version/**"
   
