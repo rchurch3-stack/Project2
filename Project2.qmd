@@ -2,6 +2,7 @@
 title: "Project2"
 format: html
 editor: visual
+author: Ralph Church
 ---
 
 ### Imports
