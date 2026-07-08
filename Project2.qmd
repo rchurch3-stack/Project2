@@ -4,23 +4,158 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
+### Imports
 ```{r}
-1 + 1
+library(readr)
+library(dplyr)
+library(ggplot2)
 ```
 
-You can add options to executable code like this
-
 ```{r}
-#| echo: false
-2 * 2
+bank_train <- read_delim(
+  "data/train.csv",
+  delim = ";",
+  show_col_types = FALSE
+)
+
+bank_test <- read_delim(
+  "data/test.csv",
+  delim = ";",
+  show_col_types = FALSE
+)
+
+bank <- bind_rows(bank_train, bank_test)
+
+# Number of rows and columns
+dim(bank)
+
+#convert column variables to factors
+bank <- bank %>%
+  mutate(
+    across(
+      c(
+        job,
+        marital,
+        education,
+        default,
+        housing,
+        loan,
+        contact,
+        month,
+        poutcome,
+        y
+      ),
+      as.factor
+    )
+  )
+
+# Variable names and types
+glimpse(bank)
+
+# First few observations
+head(bank)
+
+# Summary statistics
+summary(bank)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+### One-way contigency table
+
+This shows how many customers subscribed versus did not subscribe:
+```{r}
+table(bank$y)
+```
+
+### Two-way contingency table
+
+Marital status versus whether the customer subscribed:
+```{r}
+table(bank$marital, bank$y)
+```
+
+### Numerical Summaries
+
+```{r}
+bank %>%
+  group_by(y) %>%
+  summarize(
+    mean_age = mean(age),
+    median_age = median(age),
+    sd_age = sd(age),
+    mean_balance = mean(balance),
+    median_balance = median(balance),
+    sd_balance = sd(balance),
+    mean_duration = mean(duration),
+    .groups = "drop"
+  )
+```
+
+### Plot 1: Bar Chart
+
+```{r}
+ggplot(bank, aes(x = y)) +
+  geom_bar() +
+  labs(
+    title = "Term Deposit Subscription Counts",
+    x = "Subscribed to Term Deposit",
+    y = "Number of Customers"
+  )
+```
+
+### Plot 2: Side-by-side bar chart
+
+```{r}
+ggplot(bank, aes(x = housing, fill = y)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Subscription Status by Housing Loan",
+    x = "Has Housing Loan",
+    y = "Number of Customers",
+    fill = "Subscribed"
+  )
+```
+
+### Plot 3: Histogram
+
+```{r}
+ggplot(bank, aes(x = age, fill = y)) +
+  geom_histogram(binwidth = 5, color = "white") +
+  labs(
+    title = "Age Distribution by Subscription Status",
+    x = "Age",
+    y = "Number of Customers",
+    fill = "Subscribed"
+  )
+```
+
+### Plot 5: Scatter plot
+
+```{r}
+ggplot(bank, aes(x = age, y = balance, color = y)) +
+  geom_point(alpha = 0.4) +
+  labs(
+    title = "Age vs. Account Balance by Subscription Status",
+    x = "Age",
+    y = "Account Balance",
+    color = "Subscribed"
+  )
+```
+
+### Plot not covered in class: Heatmap
+
+```{r}
+heatmap_data <- bank %>%
+  count(job, y)
+
+ggplot(heatmap_data, aes(x = y, y = job, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), size = 3) +
+  labs(
+    title = "Heatmap of Job Type and Term Deposit Subscription",
+    x = "Subscribed to Term Deposit",
+    y = "Job Type",
+    fill = "Customer Count"
+  )
+```
+
+
