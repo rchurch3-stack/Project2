@@ -2,6 +2,7 @@ library(shiny)
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(DT)
 
 # ---------------------------------
 # Load and prepare the data
@@ -121,10 +122,20 @@ ui <- fluidPage(
             "This application allows users to explore the Bank Marketing dataset by applying filters and viewing summaries of the data."
           ),
           
-          h4("About the Data"),
+          h4("Data Source"),
           
           p(
-            "The data comes from the UCI Machine Learning Repository and contains information collected from a Portuguese bank's direct marketing campaigns."
+            "This application allows users to explore the Bank Marketing dataset through interactive filters, summary statistics, tables, and visualizations."
+          ),
+          
+          p(
+            "More information about the dataset is available here:"
+          ),
+          
+          tags$a(
+            href = "https://www.kaggle.com/datasets/prakharrathi25/banking-dataset-marketing-targets",
+            "Kaggle: Banking Dataset - Marketing Targets",
+            target = "_blank"
           ),
           
           tags$figure(
@@ -141,8 +152,31 @@ ui <- fluidPage(
           
           h4("How to Use This App"),
           
+          tags$ul(
+            tags$li("Use the sidebar to select categorical and numeric filters, then click 'Apply Filters' to update the results."),
+            tags$li("The About tab provides an overview of the application and the dataset."),
+            tags$li("The Summary tab displays summary statistics for the filtered data."),
+            tags$li("The Tables tab displays contingency tables for the filtered data."),
+            tags$li("The Plots tab displays visualizations based on the filtered data.")
+          ),
+          
           
           br(),
+          
+        ),
+        
+        tabPanel(
+          "Data Download",
+          
+          downloadButton(
+            "download_data",
+            "Download Filtered Data"
+          ),
+          
+          br(),
+          br(),
+          
+          DT::dataTableOutput("bank_table")
           
         ),
         
@@ -194,6 +228,30 @@ server <- function(input, output) {
     )
     
   })
+  
+  output$bank_table <- DT::renderDataTable({
+    
+    filtered_bank()
+    
+  })
+  
+  output$download_data <- downloadHandler(
+    
+    filename = function() {
+      "filtered_bank_data.csv"
+    },
+    
+    content = function(file) {
+      
+      write.csv(
+        filtered_bank(),
+        file,
+        row.names = FALSE
+      )
+      
+    }
+    
+  )
   
   filtered_bank <- eventReactive(
     input$apply_filters,
