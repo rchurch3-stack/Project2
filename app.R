@@ -166,17 +166,89 @@ ui <- fluidPage(
         ),
         
         tabPanel(
-          "Data Download",
           
-          downloadButton(
-            "download_data",
-            "Download Filtered Data"
+          "Data Exploration",
+          
+          radioButtons(
+            inputId = "summary_type",
+            label = "Select Summary Type",
+            choices = c("Categorical", "Numeric"),
+            selected = "Categorical",
+            inline = TRUE
           ),
           
-          br(),
-          br(),
+          conditionalPanel(
+            condition = "input.summary_type == 'Numeric'",
+            
+            selectInput(
+              "num_summary",
+              "Numeric Summary",
+              choices = c(
+                "Summary Statistics",
+                "Histogram",
+                "Scatter Plot"
+              )
+            ),
+            
+            conditionalPanel(
+              condition = "input.num_summary == 'Summary Statistics'",
+              tableOutput("summary_stats")
+            ),
+            
+            selectInput(
+              "hist_var",
+              "Histogram Variable",
+              choices = c(
+                "age",
+                "balance",
+                "duration",
+                "campaign",
+                "pdays",
+                "previous"
+              )
+            ),
+            
+            conditionalPanel(
+              condition = "input.num_summary == 'Histogram'",
+              plotOutput("plot3")
+            ),
+            
+            conditionalPanel(
+              condition = "input.num_summary == 'Scatter Plot'",
+              plotOutput("plot4")
+            )
+            
+          ),
           
-          DT::dataTableOutput("bank_table")
+          conditionalPanel(
+            condition = "input.summary_type == 'Categorical'",
+            
+            selectInput(
+              "cat_summary",
+              "Categorical Summary",
+              choices = c(
+                "One-way Table",
+                "Two-way Table",
+                "Bar Chart"
+              )
+            ),
+            
+            conditionalPanel(
+              condition = "input.cat_summary == 'One-way Table'",
+              tableOutput("one_way")
+            ),
+            
+            conditionalPanel(
+              condition = "input.cat_summary == 'Two-way Table'",
+              tableOutput("two_way")
+            ),
+            
+            conditionalPanel(
+              condition = "input.cat_summary == 'Bar Chart'",
+              plotOutput("plot1")
+            )
+            
+          ),
           
         ),
         
@@ -229,9 +301,102 @@ server <- function(input, output) {
     
   })
   
+  output$summary_stats <- renderTable({
+    
+    filtered_bank() |>
+      group_by(y) |>
+      summarize(
+        mean_age = mean(age),
+        median_age = median(age),
+        sd_age = sd(age),
+        mean_balance = mean(balance),
+        median_balance = median(balance),
+        sd_balance = sd(balance),
+        mean_duration = mean(duration),
+        .groups = "drop"
+      )
+    
+  })
+  
+  output$one_way <- renderTable({
+    
+    table(filtered_bank()$y)
+    
+  })
+  
   output$bank_table <- DT::renderDataTable({
     
     filtered_bank()
+    
+  })
+  
+  output$two_way <- renderTable({
+    
+    table(
+      filtered_bank()$marital,
+      filtered_bank()$y
+    )
+    
+  })
+  
+  output$plot1 <- renderPlot({
+    
+    ggplot(filtered_bank(), aes(x = y)) +
+      geom_bar() +
+      labs(
+        title = "Term Deposit Subscription Counts",
+        x = "Subscribed",
+        y = "Count"
+      )
+    
+  })
+  
+  output$plot2 <- renderPlot({
+    
+    ggplot(filtered_bank(),
+           aes(x = housing, fill = y)) +
+      geom_bar(position = "dodge") +
+      labs(
+        title = "Subscription by Housing Loan"
+      )
+    
+  })
+  
+  output$plot3 <- renderPlot({
+    
+    ggplot(
+      filtered_bank(),
+      aes(x = .data[[input$hist_var]], fill = y)
+    ) +
+      geom_histogram(
+        binwidth = 5,
+        color = "white"
+      ) +
+      labs(
+        title = paste("Histogram of", input$hist_var),
+        x = input$hist_var,
+        fill = "Subscribed"
+      )
+    
+  })
+  
+  output$plot4 <- renderPlot({
+    
+    ggplot(
+      filtered_bank(),
+      aes(
+        x = age,
+        y = balance,
+        color = y
+      )
+    ) +
+      geom_point(alpha = 0.4) +
+      labs(
+        title = "Age vs. Account Balance by Subscription",
+        x = "Age",
+        y = "Account Balance",
+        color = "Subscribed"
+      )
     
   })
   
