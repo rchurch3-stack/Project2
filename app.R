@@ -3,6 +3,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(DT)
+library(shinycssloaders)
 
 # ---------------------------------
 # Load and prepare the data
@@ -211,7 +212,7 @@ ui <- fluidPage(
                 )
               ),
               
-              plotOutput("plot3")
+              withSpinner(plotOutput("plot3"))
             ),
             
             conditionalPanel(
@@ -245,7 +246,7 @@ ui <- fluidPage(
                 selected = "balance"
               ),
               
-              plotOutput("plot4")
+              withSpinner(plotOutput("plot4"))
               
             ),
             
@@ -290,7 +291,7 @@ ui <- fluidPage(
                 )
               ),
               
-              plotOutput("plot1")
+              withSpinner(plotOutput("plot1"))
             )
             
           ),
@@ -313,14 +314,14 @@ ui <- fluidPage(
           br(),
           br(),
           
-          DT::dataTableOutput("bank_table")
+          withSpinner(DT::dataTableOutput("bank_table"))
           
         ),
         
         tabPanel(
           "Preview",
           
-          tableOutput("preview")
+          withSpinner(tableOutput("preview"))
           
         )
         
@@ -368,6 +369,8 @@ server <- function(input, output) {
   
   output$summary_stats <- renderTable({
     
+    req(filtered_bank())
+    
     filtered_bank() |>
       group_by(y) |>
       summarize(
@@ -385,17 +388,23 @@ server <- function(input, output) {
   
   output$one_way <- renderTable({
     
+    req(filtered_bank())
+    
     table(filtered_bank()$y)
     
   })
   
   output$bank_table <- DT::renderDataTable({
     
+    req(filtered_bank())
+    
     filtered_bank()
     
   })
   
   output$two_way <- renderTable({
+    
+    req(filtered_bank())
     
     table(
       filtered_bank()$marital,
@@ -405,6 +414,8 @@ server <- function(input, output) {
   })
   
   output$plot1 <- renderPlot({
+    
+    req(filtered_bank())
     
     ggplot(
       filtered_bank(),
@@ -424,6 +435,8 @@ server <- function(input, output) {
   
   output$plot2 <- renderPlot({
     
+    req(filtered_bank())
+    
     ggplot(filtered_bank(),
            aes(x = housing, fill = y)) +
       geom_bar(position = "dodge") +
@@ -434,6 +447,8 @@ server <- function(input, output) {
   })
   
   output$plot3 <- renderPlot({
+    
+    req(filtered_bank())
     
     ggplot(
       filtered_bank(),
@@ -456,6 +471,8 @@ server <- function(input, output) {
   })
   
   output$plot4 <- renderPlot({
+    
+    req(filtered_bank())
     
     ggplot(
       filtered_bank(),
@@ -511,6 +528,8 @@ server <- function(input, output) {
   )
   
   output$preview <- renderTable({
+    
+    req(filtered_bank())
     
     head(filtered_bank())
     
