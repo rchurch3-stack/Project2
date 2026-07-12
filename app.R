@@ -195,28 +195,59 @@ ui <- fluidPage(
               tableOutput("summary_stats")
             ),
             
-            selectInput(
-              "hist_var",
-              "Histogram Variable",
-              choices = c(
-                "age",
-                "balance",
-                "duration",
-                "campaign",
-                "pdays",
-                "previous"
-              )
-            ),
-            
             conditionalPanel(
               condition = "input.num_summary == 'Histogram'",
+              
+              selectInput(
+                "hist_var",
+                "Select Variable for Histogram",
+                choices = c(
+                  "age",
+                  "balance",
+                  "duration",
+                  "campaign",
+                  "pdays",
+                  "previous"
+                )
+              ),
+              
               plotOutput("plot3")
             ),
             
             conditionalPanel(
               condition = "input.num_summary == 'Scatter Plot'",
+              
+              selectInput(
+                "scatter_x",
+                "Select X-axis Variable",
+                choices = c(
+                  "age",
+                  "balance",
+                  "duration",
+                  "campaign",
+                  "pdays",
+                  "previous"
+                ),
+                selected = "age"
+              ),
+              
+              selectInput(
+                "scatter_y",
+                "Select Y-axis Variable",
+                choices = c(
+                  "age",
+                  "balance",
+                  "duration",
+                  "campaign",
+                  "pdays",
+                  "previous"
+                ),
+                selected = "balance"
+              ),
+              
               plotOutput("plot4")
-            )
+              
+            ),
             
           ),
           
@@ -245,10 +276,44 @@ ui <- fluidPage(
             
             conditionalPanel(
               condition = "input.cat_summary == 'Bar Chart'",
+              
+              selectInput(
+                "bar_var",
+                "Select Variable for Bar Chart",
+                choices = c(
+                  "marital",
+                  "housing",
+                  "job",
+                  "education",
+                  "loan",
+                  "contact"
+                )
+              ),
+              
               plotOutput("plot1")
             )
             
           ),
+          
+        ),
+        
+        tabPanel(
+          
+          "Data Download",
+          
+          p(
+            "View and download the filtered dataset."
+          ),
+          
+          downloadButton(
+            "download_data",
+            "Download Filtered Data"
+          ),
+          
+          br(),
+          br(),
+          
+          DT::dataTableOutput("bank_table")
           
         ),
         
@@ -341,12 +406,18 @@ server <- function(input, output) {
   
   output$plot1 <- renderPlot({
     
-    ggplot(filtered_bank(), aes(x = y)) +
-      geom_bar() +
+    ggplot(
+      filtered_bank(),
+      aes(
+        x = .data[[input$bar_var]],
+        fill = y
+      )
+    ) +
+      geom_bar(position = "dodge") +
       labs(
-        title = "Term Deposit Subscription Counts",
-        x = "Subscribed",
-        y = "Count"
+        title = paste("Subscription by", input$bar_var),
+        x = input$bar_var,
+        fill = "Subscribed"
       )
     
   })
@@ -366,7 +437,10 @@ server <- function(input, output) {
     
     ggplot(
       filtered_bank(),
-      aes(x = .data[[input$hist_var]], fill = y)
+      aes(
+        x = .data[[input$hist_var]],
+        fill = y
+      )
     ) +
       geom_histogram(
         binwidth = 5,
@@ -375,6 +449,7 @@ server <- function(input, output) {
       labs(
         title = paste("Histogram of", input$hist_var),
         x = input$hist_var,
+        y = "Count",
         fill = "Subscribed"
       )
     
@@ -385,16 +460,16 @@ server <- function(input, output) {
     ggplot(
       filtered_bank(),
       aes(
-        x = age,
-        y = balance,
+        x = .data[[input$scatter_x]],
+        y = .data[[input$scatter_y]],
         color = y
       )
     ) +
       geom_point(alpha = 0.4) +
       labs(
-        title = "Age vs. Account Balance by Subscription",
-        x = "Age",
-        y = "Account Balance",
+        title = paste(input$scatter_y, "vs.", input$scatter_x),
+        x = input$scatter_x,
+        y = input$scatter_y,
         color = "Subscribed"
       )
     
