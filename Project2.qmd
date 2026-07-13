@@ -130,20 +130,21 @@ Most customers did not subscribe, regardless of housing loan status. Customers w
 
 ### Plot 3: Histogram
 
-This histogram shows the distribution of customer ages. The bars are colored based on whether the customer subscribed to the term deposit.
+This faceted histogram shows the distribution of customer ages by subscription status, with separate panels for each marital status.
 
 ```{r}
 ggplot(bank, aes(x = age, fill = y)) +
   geom_histogram(binwidth = 5, color = "white") +
+  facet_wrap(~ marital) +
   labs(
-    title = "Age Distribution by Subscription Status",
+    title = "Age Distribution by Subscription Status and Marital Status",
     x = "Age",
     y = "Number of Customers",
     fill = "Subscribed"
   )
 ```
 
-Most customers are between 30 and 50 years old. Across all age groups, more customers did not subscribe than those who did.
+The age distribution is similar across marital status groups, and in every group more customers did not subscribe than those who did.
 
 ### Plot 4: Scatter plot
 

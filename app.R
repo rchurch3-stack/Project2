@@ -139,26 +139,39 @@ ui <- fluidPage(
             target = "_blank"
           ),
           
-          tags$figure(
-            class = "centerFigure",
-            tags$img(
-              src = "bank.jpg",
-              alt = "Bank building representing the Bank Marketing dataset.",
-              width = 500
+          fluidRow(
+            
+            column(
+              width = 5,
+              
+              tags$figure(
+                class = "centerFigure",
+                tags$img(
+                  src = "bank.jpg",
+                  alt = "Bank building representing the Bank Marketing dataset.",
+                  width = "350px",
+                  height = "250px"
+                ),
+                tags$figcaption(
+                  "Representative image of a bank used for the Bank Marketing dataset."
+                )
+              )
             ),
-            tags$figcaption(
-              "Representative image of a bank used for the Bank Marketing dataset."
+            
+            column(
+              width = 5,
+              
+              h4("How to Use This App"),
+              
+              tags$ul(
+                tags$li("Sidebar: Select categorical and numeric filters, then click 'Apply Filters' to update all results."),
+                tags$li("About: Learn about the application, dataset, and how to use the app."),
+                tags$li("Summary: View summary statistics for the filtered data."),
+                tags$li("Tables: View contingency tables for the filtered data."),
+                tags$li("Plots: Explore interactive visualizations of the filtered data.")
+              )
             )
-          ),
-          
-          h4("How to Use This App"),
-          
-          tags$ul(
-            tags$li("Use the sidebar to select categorical and numeric filters, then click 'Apply Filters' to update the results."),
-            tags$li("The About tab provides an overview of the application and the dataset."),
-            tags$li("The Summary tab displays summary statistics for the filtered data."),
-            tags$li("The Tables tab displays contingency tables for the filtered data."),
-            tags$li("The Plots tab displays visualizations based on the filtered data.")
+            
           ),
           
           
