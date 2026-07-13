@@ -12,6 +12,10 @@ library(dplyr)
 library(ggplot2)
 ```
 
+### Loading the data
+
+Fields are also converted to factors where necessary.
+
 ```{r}
 bank_train <- read_delim(
   "data/train.csv",
@@ -93,6 +97,8 @@ bank %>%
 
 ### Plot 1: Bar Chart
 
+This bar chart shows the number of customers who did and did not subscribe to the term deposit.
+
 ```{r}
 ggplot(bank, aes(x = y)) +
   geom_bar() +
@@ -103,7 +109,11 @@ ggplot(bank, aes(x = y)) +
   )
 ```
 
+Most customers did not subscribe to the term deposit. Only a small portion of customers chose to subscribe.
+
 ### Plot 2: Side-by-side bar chart
+
+This bar chart compares customers with and without a housing loan based on whether they subscribed to the term deposit.
 
 ```{r}
 ggplot(bank, aes(x = housing, fill = y)) +
@@ -116,7 +126,11 @@ ggplot(bank, aes(x = housing, fill = y)) +
   )
 ```
 
+Most customers did not subscribe, regardless of housing loan status. Customers without a housing loan appear slightly more likely to subscribe than those with a housing loan.
+
 ### Plot 3: Histogram
+
+This histogram shows the distribution of customer ages. The bars are colored based on whether the customer subscribed to the term deposit.
 
 ```{r}
 ggplot(bank, aes(x = age, fill = y)) +
@@ -129,7 +143,11 @@ ggplot(bank, aes(x = age, fill = y)) +
   )
 ```
 
-### Plot 5: Scatter plot
+Most customers are between 30 and 50 years old. Across all age groups, more customers did not subscribe than those who did.
+
+### Plot 4: Scatter plot
+
+This scatter plot shows the relationship between a customer's age and account balance. The points are colored by whether the customer subscribed to the term deposit.
 
 ```{r}
 ggplot(bank, aes(x = age, y = balance, color = y)) +
@@ -142,7 +160,28 @@ ggplot(bank, aes(x = age, y = balance, color = y)) +
   )
 ```
 
-### Plot not covered in class: Heatmap
+There is no strong relationship between age and account balance. Most customers have relatively low balances, regardless of whether they subscribed, although a few customers have much higher balances.
+
+### Plot 5: Box Plot
+
+This box plot compares the distribution of account balances for customers who did and did not subscribe to a term deposit. It helps identify differences in the median, spread, and potential outliers between the two groups.
+
+```{r}
+ggplot(bank, aes(x = y, y = balance, fill = y)) +
+  geom_boxplot() +
+  labs(
+    title = "Account Balance by Subscription Status",
+    x = "Subscribed to Term Deposit",
+    y = "Account Balance",
+    fill = "Subscribed"
+  )
+```
+
+The box plot shows that customers who subscribed ("yes") generally have a slightly higher account balance than those who did not subscribe ("no"). Both groups contain many outliers, indicating that a small number of customers have unusually large account balances.
+
+### Plot 6 not covered in class: Heatmap
+
+This heatmap shows the number of customers in each job category who did and did not subscribe to the term deposit. Darker colors represent higher customer counts.
 
 ```{r}
 heatmap_data <- bank %>%
@@ -159,4 +198,4 @@ ggplot(heatmap_data, aes(x = y, y = job, fill = n)) +
   )
 ```
 
-
+Most job groups have many more customers who did not subscribe than those who did. Blue-collar, management, and technician jobs have the largest number of customers overall.

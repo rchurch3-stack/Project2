@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ralph Church">
 
 <title>Project2</title>
 <style>
@@ -125,6 +126,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ralph Church </p>
+          </div>
+  </div>
     
   
     
@@ -162,6 +169,10 @@ Attaching package: 'dplyr'</code></pre>
 <pre><code>Warning: package 'ggplot2' was built under R version 4.5.3</code></pre>
 </div>
 </div>
+</section>
+<section id="loading-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="loading-the-data">Loading the data</h3>
+<p>Fields are also converted to factors where necessary.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bank_train <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/train.csv"</span>,</span>
@@ -331,6 +342,7 @@ $ y         &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, 
 </section>
 <section id="plot-1-bar-chart" class="level3">
 <h3 class="anchored" data-anchor-id="plot-1-bar-chart">Plot 1: Bar Chart</h3>
+<p>This bar chart shows the number of customers who did and did not subscribe to the term deposit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bank, <span class="fu">aes</span>(<span class="at">x =</span> y)) <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
@@ -347,9 +359,11 @@ $ y         &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, 
 </div>
 </div>
 </div>
+<p>Most customers did not subscribe to the term deposit. Only a small portion of customers chose to subscribe.</p>
 </section>
 <section id="plot-2-side-by-side-bar-chart" class="level3">
 <h3 class="anchored" data-anchor-id="plot-2-side-by-side-bar-chart">Plot 2: Side-by-side bar chart</h3>
+<p>This bar chart compares customers with and without a housing loan based on whether they subscribed to the term deposit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bank, <span class="fu">aes</span>(<span class="at">x =</span> housing, <span class="at">fill =</span> y)) <span class="sc">+</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
@@ -367,9 +381,11 @@ $ y         &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, 
 </div>
 </div>
 </div>
+<p>Most customers did not subscribe, regardless of housing loan status. Customers without a housing loan appear slightly more likely to subscribe than those with a housing loan.</p>
 </section>
 <section id="plot-3-histogram" class="level3">
 <h3 class="anchored" data-anchor-id="plot-3-histogram">Plot 3: Histogram</h3>
+<p>This histogram shows the distribution of customer ages. The bars are colored based on whether the customer subscribed to the term deposit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bank, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">fill =</span> y)) <span class="sc">+</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
@@ -387,9 +403,11 @@ $ y         &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, 
 </div>
 </div>
 </div>
+<p>Most customers are between 30 and 50 years old. Across all age groups, more customers did not subscribe than those who did.</p>
 </section>
-<section id="plot-5-scatter-plot" class="level3">
-<h3 class="anchored" data-anchor-id="plot-5-scatter-plot">Plot 5: Scatter plot</h3>
+<section id="plot-4-scatter-plot" class="level3">
+<h3 class="anchored" data-anchor-id="plot-4-scatter-plot">Plot 4: Scatter plot</h3>
+<p>This scatter plot shows the relationship between a customer’s age and account balance. The points are colored by whether the customer subscribed to the term deposit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bank, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> balance, <span class="at">color =</span> y)) <span class="sc">+</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
@@ -407,9 +425,55 @@ $ y         &lt;fct&gt; no, no, no, no, no, no, no, no, no, no, no, no, no, no, 
 </div>
 </div>
 </div>
+<p>There is no strong relationship between age and account balance. Most customers have relatively low balances, regardless of whether they subscribed, although a few customers have much higher balances.</p>
 </section>
-<section id="plot-not-covered-in-class-ggbeeswarm" class="level3">
-<h3 class="anchored" data-anchor-id="plot-not-covered-in-class-ggbeeswarm">Plot not covered in class: ggbeeswarm</h3>
+<section id="plot-5-box-plot" class="level3">
+<h3 class="anchored" data-anchor-id="plot-5-box-plot">Plot 5: Box Plot</h3>
+<p>This box plot compares the distribution of account balances for customers who did and did not subscribe to a term deposit. It helps identify differences in the median, spread, and potential outliers between the two groups.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bank, <span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> balance, <span class="at">fill =</span> y)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Account Balance by Subscription Status"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Subscribed to Term Deposit"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Account Balance"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Subscribed"</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The box plot shows that customers who subscribed (“yes”) generally have a slightly higher account balance than those who did not subscribe (“no”). Both groups contain many outliers, indicating that a small number of customers have unusually large account balances.</p>
+</section>
+<section id="plot-6-not-covered-in-class-heatmap" class="level3">
+<h3 class="anchored" data-anchor-id="plot-6-not-covered-in-class-heatmap">Plot 6 not covered in class: Heatmap</h3>
+<p>This heatmap shows the number of customers in each job category who did and did not subscribe to the term deposit. Darker colors represent higher customer counts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>heatmap_data <span class="ot">&lt;-</span> bank <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(job, y)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(heatmap_data, <span class="fu">aes</span>(<span class="at">x =</span> y, <span class="at">y =</span> job, <span class="at">fill =</span> n)) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> n), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Heatmap of Job Type and Term Deposit Subscription"</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Subscribed to Term Deposit"</span>,</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Job Type"</span>,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Customer Count"</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project2_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Most job groups have many more customers who did not subscribe than those who did. Blue-collar, management, and technician jobs have the largest number of customers overall.</p>
 
 
 </section>
